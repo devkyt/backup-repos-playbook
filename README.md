@@ -29,7 +29,7 @@ repos:
 Then change default path for backup directory and archive:
 ```yaml
 backup:
-  dir: /home/server/backup/play # space for playbook's work. Will be deleted on finish
+  dir: /home/server/backup/repos # space for playbook's work. Will be deleted on finish
   archive: /home/server/backup/rp-back # path to backup archive (without any extensions)
 ```
 

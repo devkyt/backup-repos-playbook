@@ -11,7 +11,7 @@ repos:
   - dev/web-metering-frontend
 
 backup:
-  dir: /home/server/backup/play
+  dir: /home/server/backup/repos
   archive: /home/server/backup/rp-back
 
 

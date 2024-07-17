@@ -35,7 +35,7 @@
     - name: Archive backup
       archive: 
         path: "{{ backup.dir }}"
-        dest: "{{ backup.archive }}"
+        dest: "{{ backup.archive }}.tar.gz"
         format: gz
 
     - name: Send backup archive to a remote storage
