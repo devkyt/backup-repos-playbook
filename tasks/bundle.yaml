@@ -1,0 +1,34 @@
+---
+- name: Clone repo 
+  git:
+    repo: "https://{{ hub.username }}:{{ hub.token }}@{{ hub.address }}/{{ uri }}.git"
+    dest: "{{ tmp }}"
+    clone: true
+    update: true
+
+- name: Extract repo name and organization from repo URI
+  set_fact:
+    repo: "{{ uri.split('/')[1] if '/' in uri else uri }}"
+    org: "{{ uri | regex_replace('(?<=\/)[^.]*$', '') if '/' in uri else undefined }}"
+
+- name: Ensure org directory exists
+  file:
+    path: "{{ backup.dir }}/{{ org }}"
+    state: directory
+    mode: 0755
+  when: org is defined
+
+- name: Create bundle
+  command:
+    chdir: "{{ tmp }}"
+    cmd: "git bundle create {{ repo }}.bundle --all"
+
+- name: Copy bundle to backup directory
+  copy:
+    src: "{{ tmp }}/{{ repo }}.bundle"
+    dest: "{{ backup.dir }}/{{ org }}{{ repo }}.bundle"
+
+- name: Cleanup
+  file: 
+    path: "{{ tmp }}"
+    state: absent

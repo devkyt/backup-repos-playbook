@@ -1,0 +1,17 @@
+required_packages:
+  - rsync
+  - git 
+  - sshpass
+
+repos:
+  - infra/gitlab
+  - infra/nginx-reverse-proxy
+  - infra/monitoring-stack 
+  - infra/otel-collector
+  - dev/web-metering-frontend
+
+backup:
+  dir: /home/server/backup/play
+  archive: /home/server/backup/rp-back
+
+

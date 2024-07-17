@@ -1,0 +1,10 @@
+hub:
+  address: github.com
+  username: nolan
+  token: police@!$la!pd%set
+
+remote_storage:
+  user: user
+  password: password
+  address: 255.255.255.255
+  folder: /data/repos/

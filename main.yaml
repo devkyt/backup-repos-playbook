@@ -1,0 +1,48 @@
+---
+- name: Backup remote repos
+  hosts: localhost
+  become: true
+
+  vars_files:
+      - ./vars/base.yaml
+      - ./vars/vault.yaml
+
+  pre_tasks:
+    - name: Ensure required packages are installed
+      apt:
+        name: "{{ required_packages }}"
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Ensure backup directory exists
+      file:
+        path: "{{ backup.dir }}"
+        state: directory
+        mode: 0755
+
+    - name: Set path to temporary directory
+      set_fact:
+        tmp: "{{ backup.dir }}/tmp"
+
+  tasks:
+    - name: Load and bundle remote repos
+      include_tasks: ./tasks/bundle.yaml
+      loop: "{{ repos }}"
+      loop_control:
+        loop_var: uri
+
+    - name: Archive backup
+      archive: 
+        path: "{{ backup.dir }}"
+        dest: "{{ backup.archive }}"
+        format: gz
+
+    - name: Send backup archive to a remote storage
+      command:
+        cmd: "sshpass -p {{ remote_storage.password }} rsync -a {{ backup.archive }} {{ remote_storage.user }}@{{ remote_storage.address }}:{{ remote_storage.folder }}"
+
+    - name: Cleanup
+      file: 
+        path: "{{ backup.dir }}"
+        state: absent
